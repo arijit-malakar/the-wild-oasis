@@ -10,8 +10,8 @@ const LoginLayout = styled.main`
   background-color: var(--color-grey-50);
 `;
 
-function Login() {
+const Login = () => {
   return <LoginLayout>Login</LoginLayout>;
-}
+};
 
 export default Login;

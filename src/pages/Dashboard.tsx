@@ -1,13 +1,13 @@
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 
-function Bookings() {
+const Dashboard = () => {
   return (
     <Row type="horizontal">
-      <Heading as="h1">All bookings</Heading>
+      <Heading as="h1">Dashboard</Heading>
       <p>TEST</p>
     </Row>
   );
-}
+};
 
-export default Bookings;
+export default Dashboard;
