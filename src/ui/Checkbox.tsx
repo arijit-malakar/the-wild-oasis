@@ -25,7 +25,21 @@ const StyledCheckbox = styled.div`
   }
 `;
 
-function Checkbox({ checked, onChange, disabled = false, id, children }) {
+interface CheckboxProps {
+  checked: boolean;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  disabled: boolean;
+  id: string;
+  children: React.ReactNode;
+}
+
+const Checkbox: React.FC<CheckboxProps> = ({
+  checked,
+  onChange,
+  disabled = false,
+  id,
+  children,
+}) => {
   return (
     <StyledCheckbox>
       <input
@@ -38,6 +52,6 @@ function Checkbox({ checked, onChange, disabled = false, id, children }) {
       <label htmlFor={!disabled ? id : ""}>{children}</label>
     </StyledCheckbox>
   );
-}
+};
 
 export default Checkbox;

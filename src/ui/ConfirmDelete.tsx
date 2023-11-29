@@ -20,7 +20,17 @@ const StyledConfirmDelete = styled.div`
   }
 `;
 
-function ConfirmDelete({ resourceName, onConfirm, disabled }) {
+interface ConfirmDeleteProps {
+  resourceName: string;
+  onConfirm: any;
+  disabled: boolean;
+}
+
+const ConfirmDelete: React.FC<ConfirmDeleteProps> = ({
+  resourceName,
+  onConfirm,
+  disabled,
+}) => {
   return (
     <StyledConfirmDelete>
       <Heading as="h3">Delete {resourceName}</Heading>
@@ -39,6 +49,6 @@ function ConfirmDelete({ resourceName, onConfirm, disabled }) {
       </div>
     </StyledConfirmDelete>
   );
-}
+};
 
 export default ConfirmDelete;
