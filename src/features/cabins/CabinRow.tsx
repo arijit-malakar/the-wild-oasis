@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { CabinType } from "./cabinType";
 
 const TableRow = styled.div`
   display: grid;
@@ -38,3 +39,13 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+
+interface CabinRowProps {
+  cabin: CabinType;
+}
+
+const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
+  return <div>Row</div>;
+};
+
+export default CabinRow;
