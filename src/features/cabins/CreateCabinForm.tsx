@@ -9,7 +9,7 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { createCabin } from "../../services/apiCabins";
-import { CabinType } from "./cabinType";
+import { CabinType } from "./cabinTypes";
 
 function CreateCabinForm() {
   const {
@@ -33,7 +33,7 @@ function CreateCabinForm() {
   });
 
   const onSubmit: SubmitHandler<CabinType> = (data) => {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   };
 
   return (
@@ -107,7 +107,13 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Cabin photo">
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", {
+            required: "Cabin image is required",
+          })}
+        />
       </FormRow>
 
       <FormRow>

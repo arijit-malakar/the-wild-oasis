@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import toast from "react-hot-toast";
-import { CabinType } from "./cabinType";
+import { CabinType } from "./cabinTypes";
 import { formatCurrency } from "../../utils/helpers";
 import { deleteCabin } from "../../services/apiCabins";
 
@@ -73,7 +73,9 @@ const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
 
   return (
     <TableRow role="row">
-      <Img src={`../src/data/cabins/${image}`} />
+      <Img
+        src={image.startsWith("cabins/") ? image : `uploads/cabins/${image}`}
+      />
       <Cabin>{name}</Cabin>
       <div>Fits up to {maxCapacity}</div>
       <Price>{formatCurrency(regularPrice)}</Price>

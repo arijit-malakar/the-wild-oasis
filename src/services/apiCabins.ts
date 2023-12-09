@@ -1,4 +1,4 @@
-import { CabinType } from "../features/cabins/cabinType";
+import { CabinType } from "../features/cabins/cabinTypes";
 
 export const getCabins = async () => {
   const res = await fetch("/api/cabins");
@@ -12,12 +12,14 @@ export const getCabins = async () => {
 };
 
 export const createCabin = async (newCabin: CabinType) => {
+  const formData = new FormData();
+  Object.entries(newCabin).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
   const res = await fetch("/api/cabins", {
     method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify(newCabin),
+    body: formData,
   });
 
   if (!res.ok) {
