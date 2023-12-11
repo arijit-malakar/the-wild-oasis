@@ -11,42 +11,25 @@ export const getCabins = async () => {
   return body.data.cabins;
 };
 
-export const createCabin = async (newCabin: CabinType) => {
+export const createEditCabin = async (newCabin: CabinType, id?: string) => {
   const formData = new FormData();
   Object.entries(newCabin).forEach(([key, value]) => {
     formData.append(key, value);
   });
 
-  const res = await fetch("/api/cabins", {
+  const fetchUrl = `/api/cabins${id ? "/" + id : ""}`;
+
+  const res = await fetch(fetchUrl, {
     method: "POST",
     body: formData,
   });
 
   if (!res.ok) {
-    throw new Error("Could not create cabin");
+    throw new Error(`Could not ${id ? "edit" : "create"} cabin`);
   }
 
   const body = await res.json();
   return body.data;
-};
-
-export const editCabin = async (id: string, editedCabin: CabinType) => {
-  const formData = new FormData();
-  Object.entries(editedCabin).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-
-  const res = await fetch(`/api/cabins/${id}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) {
-    throw new Error("Could not edit cabin");
-  }
-
-  const body = await res.json();
-  return body.data.cabin;
 };
 
 export const deleteCabin = async (id: string) => {

@@ -1,5 +1,5 @@
 export interface CabinType {
-  _id: string;
+  _id?: string;
   name: string;
   maxCapacity: number;
   regularPrice: number;
