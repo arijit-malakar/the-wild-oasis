@@ -8,21 +8,32 @@ import FormRow from "../../ui/FormRow";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
-import { createCabin } from "../../services/apiCabins";
+import { createCabin, editCabin } from "../../services/apiCabins";
 import { CabinType } from "./cabinTypes";
 
-function CreateCabinForm() {
+interface CreateCabinFormProps {
+  cabinToEdit?: CabinType;
+}
+
+const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
+  cabinToEdit = { _id: "" },
+}) => {
+  const { _id: editId, ...editValues } = cabinToEdit;
+  const isFormEditable = Boolean(editId);
+
   const {
     register,
     handleSubmit,
     reset,
     getValues,
     formState: { errors },
-  } = useForm<CabinType>();
+  } = useForm<CabinType>({
+    defaultValues: isFormEditable ? editValues : {},
+  });
 
   const queryClient = useQueryClient();
 
-  const { isPending: isCreating, mutate } = useMutation({
+  const { isPending: isCreating, mutate: create } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
       toast.success("New cabin successfully created");
@@ -32,8 +43,29 @@ function CreateCabinForm() {
     onError: (err) => toast.error(err.message),
   });
 
+  const { isPending: isEditing, mutate: edit } = useMutation({
+    mutationFn: ({
+      id,
+      newCabinData,
+    }: {
+      id: string;
+      newCabinData: CabinType;
+    }) => editCabin(id, newCabinData),
+    onSuccess: () => {
+      toast.success("Cabin successfully edited");
+      queryClient.invalidateQueries({ queryKey: ["cabins"] });
+      reset();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const isMutating = isCreating || isEditing;
+
   const onSubmit: SubmitHandler<CabinType> = (data) => {
-    mutate({ ...data, image: data.image[0] });
+    const image = typeof data.image === "string" ? data.image : data.image[0];
+    if (isFormEditable) {
+      edit({ id: editId as string, newCabinData: { ...data, image } });
+    } else create({ ...data, image });
   };
 
   return (
@@ -42,7 +74,7 @@ function CreateCabinForm() {
         <Input
           type="text"
           id="name"
-          disabled={isCreating}
+          disabled={isMutating}
           {...register("name", { required: "Cabin name is required" })}
         />
       </FormRow>
@@ -51,7 +83,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="maxCapacity"
-          disabled={isCreating}
+          disabled={isMutating}
           {...register("maxCapacity", {
             required: "Max capacity is required",
             min: {
@@ -66,7 +98,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="regularPrice"
-          disabled={isCreating}
+          disabled={isMutating}
           {...register("regularPrice", {
             required: "Cabin price is required",
             min: {
@@ -81,7 +113,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="discount"
-          disabled={isCreating}
+          disabled={isMutating}
           defaultValue={0}
           {...register("discount", {
             required: "Discount is required",
@@ -99,7 +131,7 @@ function CreateCabinForm() {
         <Textarea
           id="description"
           defaultValue=""
-          disabled={isCreating}
+          disabled={isMutating}
           {...register("description", {
             required: "Description for cabin is required",
           })}
@@ -111,7 +143,7 @@ function CreateCabinForm() {
           id="image"
           accept="image/*"
           {...register("image", {
-            required: "Cabin image is required",
+            required: isFormEditable ? false : "Cabin image is required",
           })}
         />
       </FormRow>
@@ -121,11 +153,13 @@ function CreateCabinForm() {
           <Button variation="secondary" type="reset">
             Cancel
           </Button>
-          <Button disabled={isCreating}>Add cabin</Button>
+          <Button disabled={isMutating}>
+            {isFormEditable ? "Edit cabin" : "Create new cabin"}
+          </Button>
         </>
       </FormRow>
     </Form>
   );
-}
+};
 
 export default CreateCabinForm;

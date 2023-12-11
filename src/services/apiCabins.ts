@@ -30,6 +30,25 @@ export const createCabin = async (newCabin: CabinType) => {
   return body.data;
 };
 
+export const editCabin = async (id: string, editedCabin: CabinType) => {
+  const formData = new FormData();
+  Object.entries(editedCabin).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  const res = await fetch(`/api/cabins/${id}`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Could not edit cabin");
+  }
+
+  const body = await res.json();
+  return body.data.cabin;
+};
+
 export const deleteCabin = async (id: string) => {
   const res = await fetch(`/api/cabins/${id}`, { method: "DELETE" });
 
