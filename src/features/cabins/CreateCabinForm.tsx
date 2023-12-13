@@ -11,10 +11,12 @@ import { useEditCabin } from "./useEditCabin";
 
 interface CreateCabinFormProps {
   cabinToEdit?: CabinType;
+  onCloseModal?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
   cabinToEdit = { _id: "" },
+  onCloseModal,
 }) => {
   const { _id: editId, ...editValues } = cabinToEdit;
   const isFormEditable = Boolean(editId);
@@ -40,20 +42,29 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
       editCabin(
         { id: editId as string, newCabin: { ...data, image } },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal;
+          },
         }
       );
     } else
       createCabin(
         { ...data, image },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal;
+          },
         }
       );
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? "modal" : "regular"}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -134,7 +145,7 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
 
       <FormRow>
         <>
-          <Button variation="secondary" type="reset">
+          <Button variation="secondary" type="reset" onClick={onCloseModal}>
             Cancel
           </Button>
           <Button disabled={isMutating}>
