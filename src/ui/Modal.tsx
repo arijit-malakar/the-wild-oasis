@@ -1,14 +1,8 @@
-import {
-  cloneElement,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 interface StyledModalProps {
   ref: React.RefObject<HTMLDivElement>;
@@ -83,7 +77,7 @@ interface OpenProps {
 }
 
 interface WindowProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
   name: string;
 }
 
@@ -114,18 +108,7 @@ const Open: React.FC<OpenProps> = ({ children, opens }) => {
 
 const Window: React.FC<WindowProps> = ({ children, name }) => {
   const { windowToOpen, setWindowToOpen } = useContext(ModalContext);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setWindowToOpen("");
-      }
-    };
-    document.addEventListener("click", handleClick, true);
-
-    return () => document.removeEventListener("click", handleClick, true);
-  }, [setWindowToOpen]);
+  const ref = useOutsideClick(setWindowToOpen);
 
   if (windowToOpen !== name) return null;
 
@@ -135,7 +118,11 @@ const Window: React.FC<WindowProps> = ({ children, name }) => {
         <Button onClick={() => setWindowToOpen("")}>
           <HiXMark />
         </Button>
-        <div>{children}</div>
+        <div>
+          {cloneElement(children, {
+            onCloseModal: setWindowToOpen,
+          })}
+        </div>
       </StyledModal>
     </Overlay>,
     document.body

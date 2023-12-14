@@ -11,7 +11,7 @@ import { useEditCabin } from "./useEditCabin";
 
 interface CreateCabinFormProps {
   cabinToEdit?: CabinType;
-  onCloseModal?: React.MouseEventHandler<HTMLButtonElement>;
+  onCloseModal?: () => void;
 }
 
 const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
@@ -44,7 +44,7 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
         {
           onSuccess: () => {
             reset();
-            onCloseModal;
+            onCloseModal?.();
           },
         }
       );
@@ -54,7 +54,7 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
         {
           onSuccess: () => {
             reset();
-            onCloseModal;
+            onCloseModal?.();
           },
         }
       );
