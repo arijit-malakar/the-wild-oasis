@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import styled from "styled-components";
+import styled, { StyleSheetManager } from "styled-components";
 import { CabinType } from "../features/cabins/cabinTypes";
 
 const StyledTable = styled.div`
@@ -102,18 +102,22 @@ const Table: TableComponent = ({ columns, children }) => {
 const Header: React.FC<TableChildrenProps> = ({ children }) => {
   const { columns } = useContext(TableContext);
   return (
-    <StyledHeader role="row" columns={columns} as="header">
-      {children}
-    </StyledHeader>
+    <StyleSheetManager shouldForwardProp={(prop) => prop !== "columns"}>
+      <StyledHeader role="row" columns={columns} as="header">
+        {children}
+      </StyledHeader>
+    </StyleSheetManager>
   );
 };
 
 const Row: React.FC<TableChildrenProps> = ({ children }) => {
   const { columns } = useContext(TableContext);
   return (
-    <StyledRow role="row" columns={columns}>
-      {children}
-    </StyledRow>
+    <StyleSheetManager shouldForwardProp={(prop) => prop !== "columns"}>
+      <StyledRow role="row" columns={columns}>
+        {children}
+      </StyledRow>
+    </StyleSheetManager>
   );
 };
 
