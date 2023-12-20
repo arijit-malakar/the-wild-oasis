@@ -8,7 +8,7 @@ export const getCabins = async () => {
   }
 
   const body = await res.json();
-  return body.data.cabins;
+  return body.data;
 };
 
 export const createEditCabin = async (newCabin: CabinType, id?: string) => {

@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
-import styled, { StyleSheetManager } from "styled-components";
-import { CabinType } from "../features/cabins/cabinTypes";
+import styled, { IStyledComponent, StyleSheetManager } from "styled-components";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -46,17 +45,17 @@ const StyledBody = styled.section`
   margin: 0.4rem 0;
 `;
 
-// const Footer = styled.footer`
-//   background-color: var(--color-grey-50);
-//   display: flex;
-//   justify-content: center;
-//   padding: 1.2rem;
+const Footer = styled.footer`
+  background-color: var(--color-grey-50);
+  display: flex;
+  justify-content: center;
+  padding: 1.2rem;
 
-//   /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
-//   &:not(:has(*)) {
-//     display: none;
-//   }
-// `;
+  /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
+  &:not(:has(*)) {
+    display: none;
+  }
+`;
 
 const Empty = styled.p`
   font-size: 1.6rem;
@@ -75,14 +74,18 @@ interface TableChildrenProps {
 }
 
 interface TableBodyProps {
-  data: CabinType[];
-  render: (cabin: CabinType) => JSX.Element;
+  data: any[];
+  render: (data: any) => JSX.Element;
 }
 
 interface TableComponent extends React.FC<TableProps> {
   Header: React.FC<TableChildrenProps>;
   Row: React.FC<TableChildrenProps>;
   Body: React.FC<TableBodyProps>;
+  Footer: IStyledComponent<
+    "web",
+    React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+  >;
 }
 
 interface TableContextType {
@@ -130,5 +133,6 @@ const Body: React.FC<TableBodyProps> = ({ data, render }) => {
 Table.Header = Header;
 Table.Row = Row;
 Table.Body = Body;
+Table.Footer = Footer;
 
 export default Table;

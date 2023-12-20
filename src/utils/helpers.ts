@@ -5,8 +5,8 @@ import { differenceInDays } from "date-fns/esm";
 export const subtractDates = (dateStr1: string, dateStr2: string) =>
   differenceInDays(parseISO(String(dateStr1)), parseISO(String(dateStr2)));
 
-export const formatDistanceFromNow = (dateStr: string) =>
-  formatDistance(parseISO(dateStr), new Date(), {
+export const formatDistanceFromNow = (dateStr: Date | string) =>
+  formatDistance(parseISO(dateStr as string), new Date(), {
     addSuffix: true,
   })
     .replace("about ", "")

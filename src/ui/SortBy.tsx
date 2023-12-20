@@ -10,10 +10,10 @@ interface SortByProps {
 
 const SortBy: React.FC<SortByProps> = ({ options }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sortByValue = searchParams.get("sortBy") || "";
+  const sortByValue = searchParams.get("sort") || "";
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    searchParams.set("sortBy", e.target.value);
+    searchParams.set("sort", e.target.value);
     setSearchParams(searchParams);
   };
 
