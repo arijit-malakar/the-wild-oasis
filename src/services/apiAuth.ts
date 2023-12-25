@@ -88,3 +88,26 @@ export const updateUserData = async ({
 
   return body.data;
 };
+
+export const updateUserPassword = async ({
+  passwordCurrent,
+  passwordNew,
+  passwordConfirm,
+}: PasswordUpdateType) => {
+  const res = await fetch("/api/users/updatePassword", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      passwordCurrent,
+      passwordNew,
+      passwordConfirm,
+    }),
+  });
+
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.message);
+
+  return body.data;
+};
