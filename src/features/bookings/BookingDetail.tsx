@@ -9,13 +9,13 @@ import ButtonGroup from "../../ui/ButtonGroup";
 import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 import Spinner from "../../ui/Spinner";
+import Empty from "../../ui/Empty";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 
 import { useBooking } from "./useBooking";
 import { useCheckout } from "../check-in-out/useCheckout";
 import { useMoveBack } from "../../hooks/useMoveBack";
-import { BookingType } from "./bookingTypes";
 import { useDeleteBooking } from "./useDeleteBooking";
 
 const HeadingGroup = styled.div`
@@ -32,8 +32,9 @@ function BookingDetail() {
   const navigate = useNavigate();
 
   if (isLoading) return <Spinner />;
+  if (!booking) return <Empty resource="booking" />;
 
-  const { _id: bookingId, status } = booking as BookingType;
+  const { _id: bookingId, status } = booking;
 
   const statusToTagName = {
     unconfirmed: "blue",
@@ -51,7 +52,7 @@ function BookingDetail() {
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>
 
-      <BookingDataBox booking={booking as BookingType} />
+      <BookingDataBox booking={booking} />
 
       <ButtonGroup>
         {status === "unconfirmed" && (

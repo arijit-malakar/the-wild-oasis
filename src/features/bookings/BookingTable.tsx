@@ -11,7 +11,6 @@ const BookingTable = () => {
   const { isLoading, bookings, records } = useBookings();
 
   if (isLoading) return <Spinner />;
-
   if (!bookings?.length) return <Empty resource="bookings" />;
 
   return (
