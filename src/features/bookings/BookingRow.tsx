@@ -54,11 +54,9 @@ interface BookingProps {
 const BookingRow: React.FC<BookingProps> = ({
   booking: {
     _id: bookingId,
-    createdAt,
     startDate,
     endDate,
     numNights,
-    numGuests,
     totalPrice,
     status,
     guest: { fullName: guestName, email },
