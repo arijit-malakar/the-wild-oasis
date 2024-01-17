@@ -7,7 +7,7 @@ import SpinnerMini from "../../ui/SpinnerMini";
 import { useLogin } from "./useLogin";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("jwl@test.com");
+  const [email, setEmail] = useState("admin@email.com");
   const [password, setPassword] = useState("pass1234");
   const { isLoggingIn, login } = useLogin();
 
