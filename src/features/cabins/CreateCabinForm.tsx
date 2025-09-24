@@ -14,12 +14,14 @@ import Textarea from "../../ui/Textarea";
 
 interface CreateCabinFormProps {
   cabinToEdit?: CabinType;
+  onCloseModal?: () => void;
 }
 
 type CabinFormInput = Omit<CabinType, "image"> & { image: FileList };
 
 const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
   cabinToEdit = { id: 0 },
+  onCloseModal,
 }) => {
   const { isCreating, createCabin } = useCreateCabin();
   const { isEditing, editCabin } = useEditCabin();
@@ -40,21 +42,33 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
 
   const onSubmit: SubmitHandler<CabinFormInput> = (data) => {
     const image = typeof data.image === "string" ? data.image : data.image[0];
-    if (isEditSession) editCabin({ newCabin: { ...data, image }, id: editId });
+    if (isEditSession)
+      editCabin(
+        { newCabin: { ...data, image }, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
     else
       createCabin(
         { newCabin: { ...data, image: image } },
         {
-          onSuccess: (data) => {
-            console.log(data);
+          onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      $type={onCloseModal ? "modal" : "regular"}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -138,7 +152,11 @@ const CreateCabinForm: React.FC<CreateCabinFormProps> = ({
       <FormRow>
         {/* type is an HTML attribute! */}
         <>
-          <Button $variation="secondary" type="reset">
+          <Button
+            $variation="secondary"
+            type="reset"
+            onClick={() => onCloseModal?.()}
+          >
             Cancel
           </Button>
           <Button disabled={isWorking}>
