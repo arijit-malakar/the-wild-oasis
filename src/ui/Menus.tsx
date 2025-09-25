@@ -86,6 +86,7 @@ interface ListProps extends React.PropsWithChildren {
 interface ButtonProps extends React.PropsWithChildren {
   icon: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 interface MenusComposition {
@@ -166,7 +167,12 @@ const List: React.FC<ListProps> = ({ id, children }) => {
   );
 };
 
-const Button: React.FC<ButtonProps> = ({ children, icon, onClick }) => {
+const Button: React.FC<ButtonProps> = ({
+  children,
+  icon,
+  onClick,
+  disabled,
+}) => {
   const { close } = useContext(MenusContext);
 
   const handleClick = () => {
@@ -176,7 +182,7 @@ const Button: React.FC<ButtonProps> = ({ children, icon, onClick }) => {
 
   return (
     <li>
-      <StyledButton onClick={handleClick}>
+      <StyledButton onClick={handleClick} disabled={disabled}>
         {icon} <span>{children}</span>
       </StyledButton>
     </li>

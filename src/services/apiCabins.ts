@@ -4,7 +4,7 @@ import type {
 } from "../features/cabins/cabinType";
 import supabase, { supabaseUrl } from "./supabase";
 
-const getCabins = async () => {
+const getCabins = async (): Promise<CabinType[]> => {
   const { data, error } = await supabase.from("cabins").select("*");
 
   if (error) {
