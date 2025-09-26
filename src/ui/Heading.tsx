@@ -1,6 +1,10 @@
 import styled, { css } from "styled-components";
 
-const Heading = styled.h1`
+interface HeadingProps {
+  $alignCenter?: boolean;
+}
+
+const Heading = styled.h1<HeadingProps>`
   ${(props) =>
     props.as === "h1" &&
     css`
@@ -20,6 +24,12 @@ const Heading = styled.h1`
     css`
       font-size: 2rem;
       font-weight: 500;
+    `}
+
+    ${(props) =>
+    props.$alignCenter &&
+    css`
+      text-align: center;
     `}
 
   line-height: 1.4;
