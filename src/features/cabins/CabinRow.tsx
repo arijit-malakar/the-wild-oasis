@@ -46,7 +46,7 @@ interface CabinRowProps {
 
 const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
   const { isDeleting, deleteCabin } = useDeleteCabin();
-  const { createCabin } = useCreateCabin();
+  const { isCreating, createCabin } = useCreateCabin();
 
   const {
     id: cabinId,
@@ -88,7 +88,11 @@ const CabinRow: React.FC<CabinRowProps> = ({ cabin }) => {
             <Menus.Toggle id={String(cabinId)} />
 
             <Menus.List id={String(cabinId)}>
-              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+              <Menus.Button
+                icon={<HiSquare2Stack />}
+                onClick={handleDuplicate}
+                disabled={isCreating}
+              >
                 Duplicate
               </Menus.Button>
 

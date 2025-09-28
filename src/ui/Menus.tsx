@@ -134,6 +134,8 @@ const Toggle: React.FC<ToggleProps> = ({ id }) => {
   const { openId, close, open, setPosition } = useContext(MenusContext);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+
     const rect = (e.target as HTMLElement)
       .closest("button")
       ?.getBoundingClientRect();
@@ -155,7 +157,7 @@ const Toggle: React.FC<ToggleProps> = ({ id }) => {
 
 const List: React.FC<ListProps> = ({ id, children }) => {
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useOutsideClick<HTMLUListElement>(close);
+  const ref = useOutsideClick<HTMLUListElement>(close, false);
 
   if (openId !== id) return null;
 
