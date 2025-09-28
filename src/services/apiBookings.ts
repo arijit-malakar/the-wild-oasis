@@ -1,6 +1,13 @@
-import type { BookingType } from "../features/bookings/bookingType";
+import type {
+  BookingStats,
+  BookingStays,
+  BookingType,
+} from "../features/bookings/bookingType";
+
 import supabase from "./supabase";
+
 import { COUNT_PER_PAGE } from "../utils/constants";
+import { getToday } from "../utils/helpers";
 
 type getBookingsArgs = {
   filter: {
@@ -48,6 +55,54 @@ const getBookings = async ({
   return { data, count };
 };
 
+const getBookingsSinceDate = async (date: string): Promise<BookingStats[]> => {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("created_at, totalPrice, extrasPrice")
+    .gte("created_at", date)
+    .lte("created_at", getToday({ end: true }));
+
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return data;
+};
+
+const getStaysSinceDate = async (date: string): Promise<BookingStays[]> => {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*, guests(fullName)")
+    .gte("startDate", date)
+    .lte("startDate", getToday())
+    .neq("status", "unconfirmed");
+
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return data;
+};
+
+const getStaysTodayActivity = async (): Promise<BookingStays[]> => {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*, guests(fullName, nationality, countryFlag)")
+    .or(
+      `and(status.eq.unconfirmed, startDate.eq.${getToday()}), and(status.eq.checked-in, endDate.eq.${getToday()})`
+    )
+    .order("created_at");
+
+  if (error) {
+    console.error(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return data;
+};
+
 const getBooking = async (id: BookingType["id"]): Promise<BookingType> => {
   const { data, error } = await supabase
     .from("bookings")
@@ -91,4 +146,12 @@ const deleteBooking = async (id: BookingType["id"]) => {
   return data;
 };
 
-export { getBookings, getBooking, updateBooking, deleteBooking };
+export {
+  getBookings,
+  getBookingsSinceDate,
+  getStaysSinceDate,
+  getStaysTodayActivity,
+  getBooking,
+  updateBooking,
+  deleteBooking,
+};

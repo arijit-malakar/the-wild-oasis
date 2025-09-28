@@ -23,3 +23,10 @@ export interface BookingType {
     countryFlag: string;
   };
 }
+
+export type BookingStats = Pick<
+  BookingType,
+  "created_at" | "totalPrice" | "extrasPrice"
+>;
+
+export type BookingStays = Omit<BookingType, "cabins">;
